@@ -1,54 +1,39 @@
-// index.js
-const weatherApi = "https://api.weather.gov/alerts/active?area="
-
-// Your code here!
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('state-input');
-  const button = document.getElementById('fetch-btn');
-  const display = document.getElementById('alerts-display');
-  const errorDiv = document.getElementById('error-message');
+  const form = document.querySelector('#weather-form')
+  const input = document.querySelector('#state-input')
+  const display = document.querySelector('#alerts-display')
+  const error = document.querySelector('#error-message')
 
-  button.addEventListener('click', async () => {
-    const state = input.value.trim().toUpperCase();
+  if (!form) return
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const state = input.value
+    input.value = '' // clear input
 
     try {
-      const response = await fetch(
-        `https://api.weather.gov/alerts/active?area=${state}`
-      );
+      const res = await fetch(`https://api.weather.gov/alerts/active?area=${state}`)
+      const data = await res.json()
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
+      // clear previous content + errors
+      display.innerHTML = ''
+      error.textContent = ''
+      error.classList.add('hidden')
 
-      const data = await response.json();
+      // show alert count
+      display.textContent = `Weather Alerts: ${data.features.length}`
 
-      // Clear previous results
-      display.innerHTML = '';
+      // show each alert
+      data.features.forEach(f => {
+        const p = document.createElement('p')
+        p.textContent = f.properties.headline
+        display.appendChild(p)
+      })
 
-      // Clear error message
-      errorDiv.textContent = '';
-      errorDiv.classList.add('hidden');
-
-      const alerts = data.features || [];
-
-      // Show count
-      const title = document.createElement('h2');
-      title.textContent = `Weather Alerts: ${alerts.length}`;
-      display.appendChild(title);
-
-      // Show alerts
-      alerts.forEach(alert => {
-        const p = document.createElement('p');
-        p.textContent = alert.properties.headline;
-        display.appendChild(p);
-      });
-
-    } catch (error) {
-      errorDiv.textContent = error.message;
-      errorDiv.classList.remove('hidden');
+    } catch (err) {
+      error.textContent = err.message
+      error.classList.remove('hidden')
     }
-
-    // ✅ MUST clear input AFTER click (test requires this)
-    input.value = '';
-  });
-});
+  })
+})
