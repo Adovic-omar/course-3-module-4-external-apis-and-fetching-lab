@@ -1,7 +1,25 @@
-<form id="weather-form">
-  <input id="state-input" placeholder="Enter state abbreviation" />
-  <button type="submit">Get Weather Alerts</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Alerts App</title>
+</head>
+<body>
+  <h1>Weather Alerts App</h1>
 
-<div id="alerts-display"></div>
-<div id="error-message" class="hidden"></div>
+  <form id="weather-form">
+    <input 
+      type="text" 
+      id="state-input" 
+      placeholder="Enter state abbreviation" 
+    />
+    <button type="submit">Get Weather Alerts</button>
+  </form>
+
+  <div id="alerts-display"></div>
+  <div id="error-message" class="hidden"></div>
+
+  <script src="./index.js"></script>
+</body>
+</html>
